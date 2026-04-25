@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Descrição</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    input, select, textarea, button { width: 100%; padding: 8px; margin-top: 5px; }
+    textarea { height: 100px; }
+    #output { margin-top: 20px; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; }
+  </style>
+</head>
+<body>
+
+<div style="background:#0d5c91; padding:10px; border-radius:10px; margin-bottom:15px;">
+  <img src="head.png" alt="Header" style="width:100%; border-radius:6px; display:block;">
+</div>
+
+<h2>Gerador de Descrição de Imóvel</h2>
+
+<form id="form">
+  <label>Imóvel de parceria? *</label>
+  <select id="parceria" required>
+    <option value="">Selecione</option>
+    <option value="Sim">Sim</option>
+    <option value="Não">Não</option>
+  </select>
+
+  <label>Tipo do imóvel *</label>
+  <select id="tipo" required>
+    <option value="">Selecione</option>
+    <option value="Casa">Casa</option>
+    <option value="Apartamento">Apartamento</option>
+  </select>
+
+  <label>Quartos *</label>
+  <input type="number" id="quartos" required>
+
+  <label>Suíte *</label>
+  <input type="number" id="suite" required>
+
+  <label>Banheiros *</label>
+  <input type="number" id="banheiro" required>
+
+  <label>Vagas *</label>
+  <input type="number" id="vaga" required>
+
+  <label>Área (m²) *</label>
+  <input type="number" id="area" required>
+
+  <label>CEP *</label>
+  <input type="text" id="cep" maxlength="9" required oninput="formatarCEP(this)">
+
+  <label>Valor de venda *</label>
+  <input type="text" id="valor" required oninput="formatarMoedaInput(this)">
+
+  <label>Condomínio</label>
+  <input type="text" id="condominio" oninput="formatarMoedaInput(this)">
+
+  <label>IPTU</label>
+  <input type="text" id="iptu" oninput="formatarMoedaInput(this)">
+
+  <label>Informações complementares</label>
+  <textarea id="info"></textarea>
+
+  <button type="button" onclick="gerarDescricao()">Gerar descrição</button>
+</form>
+
+<div id="output"></div>
+
+<button onclick="copiarTexto()">Copiar descrição</button>
+
+<script>
+function formatarMoedaInput(campo) {
+  let valor = campo.value.replace(/\D/g, '');
+  valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  campo.value = valor;
+}
+
+function formatarCEP(campo) {
+  let cep = campo.value.replace(/\D/g, '');
+  if (cep.length > 5) {
+    cep = cep.replace(/(\d{5})(\d+)/, '$1-$2');
+  }
+  campo.value = cep;
+}
+
+function gerarDescricao() {
+  const form = document.getElementById('form');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+  const parceria = document.getElementById('parceria').value;
+  const tipo = document.getElementById('tipo').value;
+  const quartos = document.getElementById('quartos').value;
+  const suite = document.getElementById('suite').value;
+  const banheiro = document.getElementById('banheiro').value;
+  const vaga = document.getElementById('vaga').value;
+  const area = document.getElementById('area').value;
+  const cep = document.getElementById('cep').value;
+  const valor = document.getElementById('valor').value;
+  const condominio = document.getElementById('condominio').value;
+  const iptu = document.getElementById('iptu').value;
+  const info = document.getElementById('info').value;
+
+  let texto = `🏡 IMÓVEL PARA VENDA\n\n`;
+  texto += `📌 Parceria: ${parceria}\n`;
+  texto += `🏠 Tipo: ${tipo}\n`;
+  texto += `🛏 Quartos: ${quartos} (${suite} suítes)\n`;
+  texto += `🚿 Banheiros: ${banheiro}\n`;
+  texto += `🚗 Vagas: ${vaga}\n`;
+  texto += `📐 Área: ${area}m²\n`;
+  texto += `📍 CEP: ${cep}\n\n`;
+  texto += `💰 Valor: R$ ${valor}\n`;
+
+  if (condominio) texto += `🏢 Condomínio: R$ ${condominio}\n`;
+  if (iptu) texto += `📄 IPTU: R$ ${iptu}\n`;
+
+  if (info) texto += `\n📝 ${info}\n`;
+
+  document.getElementById('output').innerText = texto;
+}
+
+function copiarTexto() {
+  const texto = document.getElementById('output').innerText;
+  navigator.clipboard.writeText(texto);
+  alert('Texto copiado!');
+}
+</script>
+
+</body>
+</html>
