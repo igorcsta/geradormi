@@ -21,6 +21,9 @@
 <h2>Gerador de Descrição de Imóvel</h2>
 
 <form id="form">
+  <label>Nome do empreendimento</label>
+  <input type="text" id="empreendimento" placeholder="Ex: Condomínio X / Residencial Y">
+
   <label>Imóvel de parceria? *</label>
   <select id="parceria" required>
     <option value="">Selecione</option>
@@ -93,6 +96,8 @@ function gerarDescricao() {
     form.reportValidity();
     return;
   }
+
+  const empreendimento = document.getElementById('empreendimento').value;
   const parceria = document.getElementById('parceria').value;
   const tipo = document.getElementById('tipo').value;
   const quartos = document.getElementById('quartos').value;
@@ -106,7 +111,12 @@ function gerarDescricao() {
   const iptu = document.getElementById('iptu').value;
   const info = document.getElementById('info').value;
 
-  let texto = `🏡 IMÓVEL PARA VENDA\n\n`;
+  let titulo = '🏡 IMÓVEL PARA VENDA';
+  if (empreendimento) {
+    titulo += ` - ${empreendimento}`;
+  }
+
+  let texto = `${titulo}\n\n`;
   texto += `📌 Parceria: ${parceria}\n`;
   texto += `🏠 Tipo: ${tipo}\n`;
   texto += `🛏 Quartos: ${quartos} (${suite} suítes)\n`;
