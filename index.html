@@ -229,15 +229,15 @@ function gerarDescricao() {
   texto += `💰 Valor: R$ ${valor}\n`;
 
   if (condominio) {
-    texto += `Condomínio: R$ ${condominio}\n`;
+    texto += `🏢 Condomínio: R$ ${condominio}\n`;
   }
 
   if (iptu) {
-    texto += `IPTU: R$ ${iptu}\n`;
+    texto += `📄 IPTU: R$ ${iptu}\n`;
   }
 
   if (info) {
-    texto += `\n${info}\n`;
+    texto += `📝 \n${info}\n`;
   }
 
   document.getElementById('output').innerText = texto;
