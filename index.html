@@ -4,14 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerador de Descrição</title>
+
   <style>
-    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
-    label { display: block; margin-top: 10px; }
-    input, select, textarea, button { width: 100%; padding: 8px; margin-top: 5px; }
-    textarea { height: 100px; }
-    #output { margin-top: 20px; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; }
+    body {
+      font-family: Arial;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+
+    textarea {
+      height: 100px;
+    }
+
+    #output {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    /* Campo inválido somente após clicar em gerar */
+    .erro {
+      border: 2px solid red !important;
+      background-color: #ffe5e5;
+    }
   </style>
 </head>
+
 <body>
 
 <div style="background:#0d5c91; padding:10px; border-radius:10px; margin-bottom:15px;">
@@ -21,6 +57,7 @@
 <h2>Gerador de Descrição de Imóvel</h2>
 
 <form id="form">
+
   <label>Nome do empreendimento</label>
   <input type="text" id="empreendimento" placeholder="Ex: Condomínio X / Residencial Y">
 
@@ -41,7 +78,7 @@
   <label>Quartos *</label>
   <input type="tel" id="quartos" required>
 
-  <label>Suíte *</label>
+  <label>Suíte</label>
   <input type="tel" id="suite">
 
   <label>Banheiros *</label>
@@ -54,45 +91,107 @@
   <input type="tel" id="area" required>
 
   <label>CEP *</label>
-  <input type="tel" id="cep" maxlength="9" required oninput="formatarCEP(this)">
+  <input
+    type="tel"
+    id="cep"
+    maxlength="9"
+    required
+    oninput="formatarCEP(this)"
+  >
 
   <label>Valor de venda *</label>
-  <input type="tel" id="valor" required oninput="formatarMoedaInput(this)">
+  <input
+    type="tel"
+    id="valor"
+    required
+    oninput="formatarMoedaInput(this)"
+  >
 
   <label>Condomínio</label>
-  <input type="tel" id="condominio" oninput="formatarMoedaInput(this)">
+  <input
+    type="tel"
+    id="condominio"
+    oninput="formatarMoedaInput(this)"
+  >
 
   <label>IPTU</label>
-  <input type="tel" id="iptu" oninput="formatarMoedaInput(this)">
+  <input
+    type="tel"
+    id="iptu"
+    oninput="formatarMoedaInput(this)"
+  >
 
   <label>Informações complementares</label>
   <textarea id="info"></textarea>
 
-  <button type="button" onclick="gerarDescricao()">Gerar descrição</button>
+  <button type="button" onclick="gerarDescricao()">
+    Gerar descrição
+  </button>
+
 </form>
 
 <div id="output"></div>
 
-<button onclick="copiarTexto()">Copiar descrição</button>
+<button onclick="copiarTexto()">
+  Copiar descrição
+</button>
 
 <script>
+
 function formatarMoedaInput(campo) {
+
   let valor = campo.value.replace(/\D/g, '');
+
   valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
   campo.value = valor;
 }
 
 function formatarCEP(campo) {
+
   let cep = campo.value.replace(/\D/g, '');
+
   if (cep.length > 5) {
     cep = cep.replace(/(\d{5})(\d+)/, '$1-$2');
   }
+
   campo.value = cep;
 }
 
 function gerarDescricao() {
+
   const form = document.getElementById('form');
+
+  // Remove erros antigos
+  const campos = form.querySelectorAll('input, select, textarea');
+
+  campos.forEach(campo => {
+    campo.classList.remove('erro');
+  });
+
+  // Verifica se o formulário é válido
   if (!form.checkValidity()) {
+
+    const camposInvalidos = form.querySelectorAll(':invalid');
+
+    // Marca campos inválidos
+    camposInvalidos.forEach(campo => {
+      campo.classList.add('erro');
+    });
+
+    // Vai até o primeiro campo inválido
+    const primeiroInvalido = camposInvalidos[0];
+
+    if (primeiroInvalido) {
+
+      primeiroInvalido.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+
+      primeiroInvalido.focus();
+    }
+
     form.reportValidity();
     return;
   }
@@ -112,11 +211,13 @@ function gerarDescricao() {
   const info = document.getElementById('info').value;
 
   let titulo = '🏡 IMÓVEL PARA VENDA';
+
   if (empreendimento) {
     titulo += ` - ${empreendimento}`;
   }
 
   let texto = `${titulo}\n\n`;
+
   texto += `📌 Parceria: ${parceria}\n`;
   texto += `🏠 Tipo: ${tipo}\n`;
   texto += `🛏 Quartos: ${quartos}${suite > 0 ? ` (${suite} suítes)` : ''}\n`;
@@ -124,21 +225,33 @@ function gerarDescricao() {
   texto += `🚗 Vagas: ${vaga}\n`;
   texto += `📐 Área: ${area}m²\n`;
   texto += `📍 CEP: ${cep}\n\n`;
+
   texto += `💰 Valor: R$ ${valor}\n`;
 
-  if (condominio) texto += `🏢 Condomínio: R$ ${condominio}\n`;
-  if (iptu) texto += `📄 IPTU: R$ ${iptu}\n`;
+  if (condominio) {
+    texto += `🏢 Condomínio: R$ ${condominio}\n`;
+  }
 
-  if (info) texto += `\n📝 ${info}\n`;
+  if (iptu) {
+    texto += `📄 IPTU: R$ ${iptu}\n`;
+  }
+
+  if (info) {
+    texto += `\n📝 ${info}\n`;
+  }
 
   document.getElementById('output').innerText = texto;
 }
 
 function copiarTexto() {
+
   const texto = document.getElementById('output').innerText;
+
   navigator.clipboard.writeText(texto);
+
   alert('Texto copiado!');
 }
+
 </script>
 
 </body>
