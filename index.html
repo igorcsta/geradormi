@@ -210,7 +210,7 @@ function gerarDescricao() {
   const iptu = document.getElementById('iptu').value;
   const info = document.getElementById('info').value;
 
-  let titulo = '🏡 IMÓVEL PARA VENDA';
+  let titulo = 'IMÓVEL PARA VENDA';
 
   if (empreendimento) {
     titulo += ` - ${empreendimento}`;
@@ -218,26 +218,26 @@ function gerarDescricao() {
 
   let texto = `${titulo}\n\n`;
 
-  texto += `📌 Parceria: ${parceria}\n`;
-  texto += `🏠 Tipo: ${tipo}\n`;
-  texto += `🛏 Quartos: ${quartos}${suite > 0 ? ` (${suite} suítes)` : ''}\n`;
-  texto += `🚿 Banheiros: ${banheiro}\n`;
-  texto += `🚗 Vagas: ${vaga}\n`;
-  texto += `📐 Área: ${area}m²\n`;
-  texto += `📍 CEP: ${cep}\n\n`;
+  texto += `Parceria: ${parceria}\n`;
+  texto += `Tipo: ${tipo}\n`;
+  texto += `Quartos: ${quartos}${suite > 0 ? ` (${suite} suítes)` : ''}\n`;
+  texto += `Banheiros: ${banheiro}\n`;
+  texto += `Vagas: ${vaga}\n`;
+  texto += `Área: ${area}m²\n`;
+  texto += `CEP: ${cep}\n\n`;
 
-  texto += `💰 Valor: R$ ${valor}\n`;
+  texto += `Valor: R$ ${valor}\n`;
 
   if (condominio) {
-    texto += `🏢 Condomínio: R$ ${condominio}\n`;
+    texto += `Condomínio: R$ ${condominio}\n`;
   }
 
   if (iptu) {
-    texto += `📄 IPTU: R$ ${iptu}\n`;
+    texto += `IPTU: R$ ${iptu}\n`;
   }
 
   if (info) {
-    texto += `\n📝 ${info}\n`;
+    texto += `\n${info}\n`;
   }
 
   document.getElementById('output').innerText = texto;
